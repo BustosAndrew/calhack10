@@ -23,9 +23,20 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: const BottomAppBar(
+        bottomNavigationBar: BottomAppBar(
           color: Colors.blue,
           height: 30,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.bar_chart)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.home)),
+              IconButton(
+                  onPressed: () {}, icon: const Icon(Icons.message_outlined)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.apple))
+            ],
+          ),
         ),
       ),
     );
