@@ -24,11 +24,8 @@ class bottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Settings()));
-              },
-              icon: const Icon(Icons.settings, color: Colors.white)),
+              onPressed: () {},
+              icon: const Icon(Icons.apple, color: Colors.white)),
           IconButton(
               onPressed: () {},
               icon: const Icon(Icons.bar_chart, color: Colors.white)),
@@ -44,9 +41,9 @@ class bottomNavBar extends StatelessWidget {
           IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => FoodEntryPage()));
+                    MaterialPageRoute(builder: (context) => Settings()));
               },
-              icon: const Icon(Icons.apple, color: Colors.white))
+              icon: const Icon(Icons.settings, color: Colors.white)),
         ],
       ),
     );

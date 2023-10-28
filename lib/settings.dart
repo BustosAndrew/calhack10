@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zeppos/AddFoodDB.dart';
 
 class Settings extends StatelessWidget {
   const Settings({Key? key}) : super(key: key);
@@ -32,7 +33,10 @@ class Settings extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.food_bank),
             title: Text('My Custom Foods'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => FoodEntryPage()));
+            },
           ),
           Divider(),
           ListTile(
