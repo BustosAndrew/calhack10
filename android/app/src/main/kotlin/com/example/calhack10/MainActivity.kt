@@ -1,0 +1,6 @@
+package com.example.calhack10
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
