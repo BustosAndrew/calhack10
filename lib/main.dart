@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:zeppos/User_Auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:zeppos/homepage.dart';
 import 'firebase_options.dart';
 
-void main() {
-  runApp(const LoginPage());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: LoginPage(),
+    );
+  }
 }
 
 class LoginPage extends StatefulWidget {
@@ -48,8 +64,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () async {
-                  dynamic result = await _auth.signInWithEmailAndPassword(
+                /*onPressed: () async {
+                   dynamic result = await _auth.signInWithEmailAndPassword(
                       'test@example.com', 'password123');
                   if (result == null) {
                     print('Error signing in');
@@ -57,6 +73,12 @@ class _LoginPageState extends State<LoginPage> {
                     print('Signed in');
                     print(result.uid);
                   }
+               */
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
                 },
                 child: Text('Sign In'),
               ),
