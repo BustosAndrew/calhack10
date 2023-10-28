@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:zeppos/AddFoodDB.dart';
+import 'package:zeppos/chatRoom.dart';
+import 'package:zeppos/settings.dart';
 
 class bottomNavBar extends StatelessWidget {
   const bottomNavBar({Key? key}) : super(key: key);
@@ -22,7 +24,10 @@ class bottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Settings()));
+              },
               icon: const Icon(Icons.settings, color: Colors.white)),
           IconButton(
               onPressed: () {},
@@ -31,7 +36,10 @@ class bottomNavBar extends StatelessWidget {
               onPressed: () {},
               icon: const Icon(Icons.home, color: Colors.white)),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ChatPage()));
+              },
               icon: const Icon(Icons.message_outlined, color: Colors.white)),
           IconButton(
               onPressed: () {
