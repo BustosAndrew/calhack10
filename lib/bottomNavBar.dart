@@ -1,0 +1,46 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:zeppos/AddFoodDB.dart';
+
+class bottomNavBar extends StatelessWidget {
+  const bottomNavBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.settings, color: Colors.white)),
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.bar_chart, color: Colors.white)),
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.home, color: Colors.white)),
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.message_outlined, color: Colors.white)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => FoodEntryPage()));
+              },
+              icon: const Icon(Icons.apple, color: Colors.white))
+        ],
+      ),
+    );
+  }
+}
