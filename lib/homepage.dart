@@ -10,9 +10,9 @@ class HomePage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Home Page'),
+          title: const Text('Home Page'),
         ),
-        body: SingleChildScrollView(
+        body: const SingleChildScrollView(
           child: Column(
             children: [
               macrosCard(),
@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
+        bottomNavigationBar: const BottomAppBar(
           color: Colors.blue,
           height: 30,
         ),

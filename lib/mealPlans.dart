@@ -13,7 +13,7 @@ class NutritionalFactCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Grilled Chicken Salad', // Meal name
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),

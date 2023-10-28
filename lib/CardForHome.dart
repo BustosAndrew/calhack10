@@ -9,7 +9,7 @@ class macrosCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Card(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(topRight: Radius.circular(100))),
         child: Column(
           children: [
@@ -47,7 +47,7 @@ class macrosCard extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Column(
                   children: [
                     SizedBox(
@@ -64,7 +64,7 @@ class macrosCard extends StatelessWidget {
                             value: 1,
                             radius: 10,
                             title: "Cals eaten: 200",
-                            titleStyle: TextStyle(
+                            titleStyle: const TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold),
                             color: Colors.orange),
                       ])),
@@ -73,10 +73,10 @@ class macrosCard extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(
+            const Divider(
               thickness: 1,
             ),
-            Center(
+            const Center(
               child: Row(
                 children: [
                   SizedBox(

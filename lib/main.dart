@@ -1,24 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:zeppos/homepage.dart';
+import 'package:zeppos/User_Auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-void main() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const LoginPage(),
-    );
-  }
+void main() {
+  runApp(const LoginPage());
 }
 
 class LoginPage extends StatefulWidget {
@@ -31,6 +17,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +48,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
+                onPressed: () async {
+                  dynamic result = await _auth.signInWithEmailAndPassword(
+                      'test@example.com', 'password123');
+                  if (result == null) {
+                    print('Error signing in');
+                  } else {
+                    print('Signed in');
+                    print(result.uid);
+                  }
                 },
-                child: const Text('Login'),
+                child: Text('Sign In'),
               ),
             ],
           ),
