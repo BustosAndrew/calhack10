@@ -34,39 +34,71 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text('Add ')),
+        appBar: AppBar(title: Text('Chat')),
         body: Column(
           children: [
             Expanded(
-              child: StreamBuilder<QuerySnapshot>(
+              child: StreamBuilder<DocumentSnapshot>(
                   stream: FirebaseFirestore.instance
-                      .collection('messages')
+                      .collection('users')
+                      .doc(userId)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return Text(
-                          "hi"); //Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     }
-                    final messages = snapshot.data!.docs;
-                    List<Widget> messageWidgets = [];
-                    for (var message in messages) {
-                      final messageText = message['text'];
-                      final messageSender = message['sender'];
-                      final messageType = message['type'];
 
-                      final isUser = messageType == 'sent';
+                    final chatHistory = snapshot.data!['chatHistory'] ?? [];
 
-                      final messageWidget = ListTile(
-                          leading: isUser ? null : Icon(Icons.computer),
-                          title: Text(isUser
-                              ? "You: $messageText"
-                              : "$messageSender: $messageText"));
-
-                      messageWidgets.add(messageWidget);
-                    }
-                    return ListView(
+                    return ListView.builder(
                       controller: _scrollController,
-                      children: messageWidgets,
+                      itemCount: chatHistory.length,
+                      itemBuilder: (context, index) {
+                        final message = chatHistory[index];
+                        final messageText = message['content'];
+                        final isFunction = message['function_call'] != null;
+                        final messageType = message['role'];
+
+                        if (isFunction ||
+                            messageType == "system" ||
+                            messageType == "function") {
+                          return SizedBox.shrink();
+                        }
+
+                        final isUser = messageType == 'user';
+
+                        return Align(
+                          alignment: isUser
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 8.0),
+                            decoration: BoxDecoration(
+                              color:
+                                  isUser ? Colors.blue[400] : Colors.grey[300],
+                              borderRadius: isUser
+                                  ? BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      bottomLeft: Radius.circular(15),
+                                    )
+                                  : BorderRadius.only(
+                                      topRight: Radius.circular(15),
+                                      bottomRight: Radius.circular(15),
+                                    ),
+                            ),
+                            child: Text(
+                              messageText,
+                              style: TextStyle(
+                                color: isUser ? Colors.white : Colors.black,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     );
                   }),
             ),
@@ -86,6 +118,7 @@ class _ChatPageState extends State<ChatPage> {
                   IconButton(
                     icon: Icon(Icons.send),
                     onPressed: () {
+                      print(userId);
                       _sendMessage();
                     },
                   )
@@ -102,35 +135,39 @@ class _ChatPageState extends State<ChatPage> {
     if (_controller.text.isNotEmpty) {
       // Call the function
       final response = await http.post(
-        Uri.parse('https://chat-4tin4bdxkq-uc.a.run.app/'),
-        body: {'message': _controller.text},
+        Uri.parse('https://chat-4tin4bdxkq-uc.a.run.app/chat'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: '{"msg": "${_controller.text}", "uid": "$userId"}',
       );
+      print(response.body);
 
       if (response.statusCode == 200) {
-        // Process the function's response if needed
-        print("Function responded with: ${response.body}");
+        final aiResponse = response.body;
 
-        // Reference to the user's chatHistory subcollection
-        final userChatHistoryRef = FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .collection('chatHistory');
+        // Reference to the user's document
+        final userDocRef =
+            FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Store the user's message
-        await userChatHistoryRef.add({
-          'text': _controller.text,
-          'sender': 'user',
-          'type': 'sent',
-          'timestamp': FieldValue.serverTimestamp(),
+        // Fetch the current chatHistory
+        DocumentSnapshot userDocSnapshot = await userDocRef.get();
+        List<dynamic> chatHistory = userDocSnapshot['chatHistory'] ?? [];
+
+        // Append the user's message
+        chatHistory.add({
+          'content': _controller.text,
+          'role': 'user',
         });
 
-        // Store the function's response (AI's message)
-        await userChatHistoryRef.add({
-          'text': response.body,
-          'sender': 'AI',
-          'type': 'received',
-          'timestamp': FieldValue.serverTimestamp(),
+        // Append the function's response (AI's message)
+        chatHistory.add({
+          'content': aiResponse,
+          'role': 'assistant',
         });
+
+        // Update the chatHistory field
+        await userDocRef.update({'chatHistory': chatHistory});
 
         _controller.clear();
 

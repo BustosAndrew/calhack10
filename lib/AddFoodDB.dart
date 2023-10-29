@@ -248,6 +248,7 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
                       'allergens': allergens,
                       //'vitamins': vitamins,
                       'recipe': recipe,
+                      'isMeal': isMeal,
                     });
                     // Clear form and show a success message
                     ingredientController.clear();

@@ -1,5 +1,22 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+Future<Map<String, dynamic>> fetchUserData(String userId) async {
+  final userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+  final userSnapshot = await userRef.get();
+
+  final todayDate =
+      DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD format
+  final dailyMacrosSnapshot =
+      await userRef.collection('dailyMacros').doc(todayDate).get();
+
+  return {
+    'goalcals': userSnapshot.data()?['goalcals'] ?? 2000,
+    'calories': dailyMacrosSnapshot.data()?['calories'] ?? 0
+  };
+}
 
 class MacrosCard extends StatelessWidget {
   final double goalCal;
@@ -9,8 +26,8 @@ class MacrosCard extends StatelessWidget {
   MacrosCard(
       {Key? key,
       this.goalCal = 2000,
-      this.dailyCal = 1000,
-      this.burnedCal = 800})
+      required this.dailyCal,
+      this.burnedCal = 0})
       : super(key: key);
 
   @override
@@ -121,6 +138,34 @@ class MacrosCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MacrosCardWithData extends StatelessWidget {
+  final String userId;
+
+  MacrosCardWithData({required this.userId});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: fetchUserData(userId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            return MacrosCard(
+              goalCal: snapshot.data!['goalcals'].toDouble(),
+              dailyCal: snapshot.data!['calories'].toDouble(),
+              burnedCal: 800, // You can update this as needed
+            );
+          } else {
+            return Text('Error fetching data.');
+          }
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
     );
   }
 }
