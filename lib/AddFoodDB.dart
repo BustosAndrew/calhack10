@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class FoodEntryPage extends StatefulWidget {
   @override
@@ -11,15 +11,26 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String? name;
-  String? calories;
-  String? protein;
-  String? fat;
-  String? sugar;
-  String? sodium;
+  int? calories;
+  int? protein;
+  int? fat;
+  int? sugar;
+  int? sodium;
   List<String> ingredients = [];
   List<String> allergens = [];
   List<String> vitamins = [];
   String? recipe;
+  bool isMeal = false; // New variable to track if food is a meal
+  Map<String, String> mealIngredients =
+      {}; // New variable to store ingredients and their quantities for a meal
+
+  TextEditingController ingredientAmountController =
+      TextEditingController(); // For the quantity of the meal ingredient
+
+  List<String> cookingInstructions =
+      []; // List to store step-by-step cooking instructions
+  TextEditingController cookingInstructionController =
+      TextEditingController(); // For entering each cooking step
 
   TextEditingController ingredientController = TextEditingController();
   TextEditingController allergenController = TextEditingController();
@@ -43,14 +54,14 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
               ),
               // Calories
               TextFormField(
-                onChanged: (value) => calories = value,
+                onChanged: (value) => calories = int.tryParse(value),
                 decoration: InputDecoration(labelText: 'Calories'),
                 keyboardType: TextInputType.number,
                 validator: (value) => value!.isEmpty ? 'Enter Calories' : null,
               ),
               // Protein
               TextFormField(
-                onChanged: (value) => protein = value,
+                onChanged: (value) => protein = int.tryParse(value),
                 decoration: InputDecoration(labelText: 'Protein (g)'),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
@@ -58,7 +69,7 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
               ),
               // Fat
               TextFormField(
-                onChanged: (value) => fat = value,
+                onChanged: (value) => fat = int.tryParse(value),
                 decoration: InputDecoration(labelText: 'Fat (g)'),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
@@ -66,7 +77,7 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
               ),
               // Sugar
               TextFormField(
-                onChanged: (value) => sugar = value,
+                onChanged: (value) => sugar = int.tryParse(value),
                 decoration: InputDecoration(labelText: 'Sugar (g)'),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
@@ -74,7 +85,7 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
               ),
               // Sodium
               TextFormField(
-                onChanged: (value) => sodium = value,
+                onChanged: (value) => sodium = int.tryParse(value),
                 decoration: InputDecoration(labelText: 'Sodium (mg)'),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
@@ -138,6 +149,79 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
                 maxLines: 5,
                 validator: (value) => value!.isEmpty ? 'Enter Recipe' : null,
               ),
+              Row(
+                children: [
+                  Text("Is it a meal?"),
+                  Checkbox(
+                    value: isMeal,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isMeal = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+
+              if (isMeal) ...[
+                // Dynamic list for meal ingredients and their quantities
+                ...mealIngredients.entries
+                    .map((e) => Text('${e.key}: ${e.value}')),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: ingredientController,
+                        decoration: InputDecoration(
+                            labelText: 'Ingredient (e.g., onions)'),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextFormField(
+                        controller: ingredientAmountController,
+                        decoration: InputDecoration(
+                            labelText: 'Amount (e.g., 1 whole)'),
+                      ),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (ingredientController.text.isNotEmpty &&
+                        ingredientAmountController.text.isNotEmpty) {
+                      setState(() {
+                        mealIngredients[ingredientController.text] =
+                            ingredientAmountController.text;
+                        ingredientController.clear();
+                        ingredientAmountController.clear();
+                      });
+                    }
+                  },
+                  child: Text('Add Ingredient for Meal'),
+                ),
+
+                // Dynamic list for step-by-step cooking instructions
+                ...cookingInstructions.map((instruction) => Text(instruction)),
+                TextFormField(
+                  controller: cookingInstructionController,
+                  decoration: InputDecoration(labelText: 'Add Cooking Step'),
+                  maxLines: 3,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (cookingInstructionController.text.isNotEmpty) {
+                      setState(() {
+                        cookingInstructions
+                            .add(cookingInstructionController.text);
+                        cookingInstructionController.clear();
+                      });
+                    }
+                  },
+                  child: Text('Add Cooking Step'),
+                ),
+              ],
+
               SizedBox(height: 20),
               // Submit Button
               ElevatedButton(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:zeppos/AddFoodDB.dart';
 import 'package:zeppos/chatRoom.dart';
+import 'package:zeppos/mealplan.dart';
 import 'package:zeppos/settings.dart';
 
 class bottomNavBar extends StatelessWidget {
@@ -26,9 +27,9 @@ class bottomNavBar extends StatelessWidget {
           IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Settings()));
+                    MaterialPageRoute(builder: (context) => MealPage()));
               },
-              icon: const Icon(Icons.settings, color: Colors.white)),
+              icon: const Icon(Icons.apple, color: Colors.white)),
           IconButton(
               onPressed: () {},
               icon: const Icon(Icons.bar_chart, color: Colors.white)),
@@ -44,9 +45,9 @@ class bottomNavBar extends StatelessWidget {
           IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => FoodEntryPage()));
+                    MaterialPageRoute(builder: (context) => Settings()));
               },
-              icon: const Icon(Icons.apple, color: Colors.white))
+              icon: const Icon(Icons.settings, color: Colors.white)),
         ],
       ),
     );
