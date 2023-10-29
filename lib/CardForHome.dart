@@ -1,11 +1,17 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class macrosCard extends StatelessWidget {
-  macrosCard({super.key});
-  double goalCal = 2000;
-  double dailyCal = 1000;
-  double burnedCal = 800;
+class MacrosCard extends StatelessWidget {
+  final double goalCal;
+  final double dailyCal;
+  final double burnedCal;
+
+  MacrosCard(
+      {Key? key,
+      this.goalCal = 2000,
+      this.dailyCal = 1000,
+      this.burnedCal = 800})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,63 +78,46 @@ class macrosCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 Column(
                   children: [
-                    SizedBox(
+                    Container(
                       height: 200,
                       width: 200,
-                      child: PieChart(PieChartData(
-                          centerSpaceRadius: 50,
-                          centerSpaceColor: Colors.white,
-                          sections: [
-                            PieChartSectionData(
-                                value: goalCal - dailyCal,
-                                title: " ",
-                                radius: 10,
-                                color: Colors.blue),
-                            PieChartSectionData(
-                                value: dailyCal,
-                                radius: 10,
-                                title: "${dailyCal / goalCal * 100}%",
-                                titleStyle: const TextStyle(
-                                    fontSize: 32, fontWeight: FontWeight.bold),
-                                color: Colors.orange),
-                          ])),
+                      child: Stack(
+                        children: [
+                          PieChart(
+                            PieChartData(
+                                centerSpaceRadius: 50,
+                                centerSpaceColor: Colors.white,
+                                sections: [
+                                  PieChartSectionData(
+                                      value: goalCal - dailyCal,
+                                      title:
+                                          " ", // Keep this empty if you don't want a label
+                                      radius: 10,
+                                      color: Colors.blue),
+                                  PieChartSectionData(
+                                      value: dailyCal,
+                                      radius: 10,
+                                      title:
+                                          "", // Remove the percentage title here
+                                      color: Colors.orange),
+                                ]),
+                          ),
+                          // Overlay the remaining calories in the center
+                          Center(
+                            child: Text(
+                              "${(goalCal - dailyCal).toStringAsFixed(0)} Cals",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
-            /*const Divider(
-              thickness: 1,
-            ),
-            const Center(
-                /*child: Row(
-                children: [
-                  SizedBox(
-                    width: 60,
-                  ),
-                  Text("Food"),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text("Calories"),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text("Carbs"),
-                  SizedBox(
-                    width: 60,
-                  ),
-                  Text("Protein"),
-                  SizedBox(
-                    width: 80,
-                  ),
-                  Text("Fat"),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),*/
-                )*/
           ],
         ),
       ),
