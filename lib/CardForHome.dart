@@ -1,21 +1,32 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
 
-Future<Map<String, dynamic>> fetchUserData(String userId) async {
+Stream<Map<String, dynamic>> fetchUserDataStream(String userId) {
   final userRef = FirebaseFirestore.instance.collection('users').doc(userId);
-  final userSnapshot = await userRef.get();
 
-  final todayDate =
-      DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD format
-  final dailyMacrosSnapshot =
-      await userRef.collection('dailyMacros').doc(todayDate).get();
+  // Listen to changes in user data
+  Stream<DocumentSnapshot> userStream = userRef.snapshots();
 
-  return {
-    'goalcals': userSnapshot.data()?['goalcals'] ?? 2000,
-    'calories': dailyMacrosSnapshot.data()?['calories'] ?? 0
-  };
+  // Listen to changes in the dailyMacros collection
+  Stream<QuerySnapshot> dailyMacrosStream =
+      userRef.collection('dailyMacros').limit(1).snapshots();
+
+  return Rx.combineLatest2(userStream, dailyMacrosStream,
+      (userSnap, dailyMacrosSnap) {
+    Map<String, dynamic> userData = userSnap.data() as Map<String, dynamic>;
+    double goalCal = userData['goalcals']?.toDouble() ?? 2000.0;
+
+    double dailyCal = 0.0;
+    if (dailyMacrosSnap.docs.isNotEmpty) {
+      Map<String, dynamic> dailyMacrosData =
+          dailyMacrosSnap.docs.first.data() as Map<String, dynamic>;
+      dailyCal = dailyMacrosData['calories']?.toDouble() ?? 0.0;
+    }
+
+    return {'goalcals': goalCal, 'calories': dailyCal};
+  });
 }
 
 class MacrosCard extends StatelessWidget {
@@ -149,15 +160,15 @@ class MacrosCardWithData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: fetchUserData(userId),
+    return StreamBuilder<Map<String, dynamic>>(
+      stream: fetchUserDataStream(userId),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.hasData) {
             return MacrosCard(
               goalCal: snapshot.data!['goalcals'].toDouble(),
               dailyCal: snapshot.data!['calories'].toDouble(),
-              burnedCal: 800, // You can update this as needed
+              burnedCal: 0, // You can update this as needed
             );
           } else {
             return Text('Error fetching data.');

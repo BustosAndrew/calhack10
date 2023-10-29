@@ -9,7 +9,7 @@ class _MealPageState extends State<MealPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Monday's Meals")),
+      appBar: AppBar(title: Text("Today's Meals")),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: ListView(
@@ -76,7 +76,10 @@ class _MealPageState extends State<MealPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("$mealType: $mealName"),
+            Text("$mealType: $mealName",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
+            Text(description, maxLines: 2, overflow: TextOverflow.ellipsis),
             SizedBox(height: 8),
             Text("Calories: $calories"),
             Text("Protein: $protein g"),
@@ -86,60 +89,70 @@ class _MealPageState extends State<MealPage> {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                showDialog(
+                showModalBottomSheet(
                   context: context,
                   builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("$mealName"),
-                      content: Text("$description"),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Cooking Instructions"),
-                                  content: Text("$cookingInstructions"),
-                                  actions: [
-                                    ElevatedButton(
-                                      child: Text("Close"),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Text("How to Cook"),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Shopping List"),
-                                  content: Text("$shoppingList"),
-                                  actions: [
-                                    ElevatedButton(
-                                      child: Text("Close"),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Text("Shopping List"),
-                        ),
-                      ],
+                    return Container(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize
+                            .min, // Set to adjust the content's size
+                        children: [
+                          Text("$mealName",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 12),
+                          Text(description),
+                          SizedBox(height: 12),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Cooking Instructions"),
+                                    content: Text("$cookingInstructions"),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text("Close"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Text("How to Cook"),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Shopping List"),
+                                    content: Text("$shoppingList"),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text("Close"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Text("Shopping List"),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );

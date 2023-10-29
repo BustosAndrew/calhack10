@@ -118,7 +118,6 @@ class _ChatPageState extends State<ChatPage> {
                   IconButton(
                     icon: Icon(Icons.send),
                     onPressed: () {
-                      print(userId);
                       _sendMessage();
                     },
                   )
