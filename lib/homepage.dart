@@ -25,13 +25,58 @@ class HomePage extends StatelessWidget {
                       minHeight: constraints.maxHeight,
                     ),
                     child: Column(
-                      children: [
+                      children: <Widget>[
                         macrosCard(),
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            //NutritionalFactCard()
+                            Text(
+                              "Food Log",
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 60,
+                            ),
                           ],
+                        ),
+                        Center(
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 30,
+                              ),
+                              Text("Food"),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              Text("Calories"),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              Text("Carbs"),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              Text("Protein"),
+                              SizedBox(
+                                width: 60,
+                              ),
+                              Text("Fat"),
+                              SizedBox(
+                                width: 30,
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 120,
@@ -45,6 +90,15 @@ class HomePage extends StatelessWidget {
                   left: 0,
                   right: 0,
                   child: bottomNavBar(),
+                ),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: macrosCard(),
+                ),
+                Center(
+                  child: Text("thing"),
                 ),
               ],
             );

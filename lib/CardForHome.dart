@@ -2,7 +2,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class macrosCard extends StatelessWidget {
-  const macrosCard({super.key});
+  macrosCard({super.key});
+  double goalCal = 2000;
+  double dailyCal = 1000;
+  double burnedCal = 800;
 
   @override
   Widget build(BuildContext context) {
@@ -10,13 +13,14 @@ class macrosCard extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: Card(
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(topRight: Radius.circular(100))),
+            borderRadius:
+                BorderRadius.only(/*topRight: Radius.circular(100)*/)),
         child: Column(
           children: [
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Column(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Row(
@@ -29,16 +33,34 @@ class macrosCard extends StatelessWidget {
                             Text("Eaten"),
                             Row(
                               children: [
-                                Text("1127 kcals"),
+                                Text(
+                                  "${dailyCal.toStringAsFixed(0)} kcals",
+                                  style: TextStyle(fontSize: 18),
+                                ),
                               ],
                             ),
                             SizedBox(
-                              height: 50,
+                              height: 20,
+                            ),
+                            Text("Goal"),
+                            Row(
+                              children: [
+                                Text(
+                                  '${goalCal.toStringAsFixed(0)} kcals',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
                             ),
                             Text("Burned"),
                             Row(
                               children: [
-                                Text("1127 kcals"),
+                                Text(
+                                  "${burnedCal.toStringAsFixed(0)} kcals",
+                                  style: TextStyle(fontSize: 18),
+                                ),
                               ],
                             )
                           ],
@@ -53,34 +75,44 @@ class macrosCard extends StatelessWidget {
                     SizedBox(
                       height: 200,
                       width: 200,
-                      child: PieChart(
-                          PieChartData(centerSpaceRadius: 50, sections: [
-                        PieChartSectionData(
-                            value: 10,
-                            title: " ",
-                            radius: 10,
-                            color: Colors.blue),
-                        PieChartSectionData(
-                            value: 1,
-                            radius: 10,
-                            title: "Cals eaten: 200",
-                            titleStyle: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                            color: Colors.orange),
-                      ])),
+                      child: PieChart(PieChartData(
+                          centerSpaceRadius: 50,
+                          centerSpaceColor: Colors.white,
+                          sections: [
+                            PieChartSectionData(
+                                value: goalCal - dailyCal,
+                                title: " ",
+                                radius: 10,
+                                color: Colors.blue),
+                            PieChartSectionData(
+                                value: dailyCal,
+                                radius: 10,
+                                title: "${dailyCal / goalCal * 100}%",
+                                titleStyle: const TextStyle(
+                                    fontSize: 32, fontWeight: FontWeight.bold),
+                                color: Colors.orange),
+                          ])),
                     ),
                   ],
                 ),
               ],
             ),
-            const Divider(
+            /*const Divider(
               thickness: 1,
             ),
             const Center(
-              child: Row(
+                /*child: Row(
                 children: [
                   SizedBox(
                     width: 60,
+                  ),
+                  Text("Food"),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text("Calories"),
+                  SizedBox(
+                    width: 10,
                   ),
                   Text("Carbs"),
                   SizedBox(
@@ -95,8 +127,8 @@ class macrosCard extends StatelessWidget {
                     width: 10,
                   ),
                 ],
-              ),
-            )
+              ),*/
+                )*/
           ],
         ),
       ),
