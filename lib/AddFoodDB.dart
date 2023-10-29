@@ -14,6 +14,7 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
   int? calories;
   int? protein;
   int? fat;
+  int? carbs;
   int? sugar;
   int? sodium;
   List<String> ingredients = [];
@@ -75,6 +76,13 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
                 validator: (value) =>
                     value!.isEmpty ? 'Enter Fat amount' : null,
               ),
+              TextFormField(
+                onChanged: (value) => carbs = int.tryParse(value),
+                decoration: InputDecoration(labelText: 'Carbs (g)'),
+                keyboardType: TextInputType.number,
+                validator: (value) =>
+                    value!.isEmpty ? 'Enter Carbs amount' : null,
+              ),
               // Sugar
               TextFormField(
                 onChanged: (value) => sugar = int.tryParse(value),
@@ -126,11 +134,12 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
                 child: Text('Add Allergen'),
               ),
               // Dynamic vitamins list
+              /*
               ...vitamins.map((vitamin) => Text(vitamin)),
-              TextFormField(
+              TextFormField(n
                 controller: vitaminController,
                 decoration: InputDecoration(labelText: 'Add Vitamin'),
-              ),
+              ),*/
               ElevatedButton(
                 onPressed: () {
                   if (vitaminController.text.isNotEmpty) {
@@ -232,11 +241,12 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
                       'calories': calories,
                       'protein': protein,
                       'fat': fat,
+                      'carbs': carbs,
                       'sugar': sugar,
                       'sodium': sodium,
                       'ingredients': ingredients,
                       'allergens': allergens,
-                      'vitamins': vitamins,
+                      //'vitamins': vitamins,
                       'recipe': recipe,
                       'isMeal': isMeal,
                     });
