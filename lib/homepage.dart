@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zeppos/CardForHome.dart';
 import 'package:zeppos/bottomNavBar.dart';
@@ -7,6 +8,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final userId = user?.uid;
+
+    if (userId == null) {
+      return Center(child: Text('User is not logged in!'));
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -16,7 +24,7 @@ class HomePage extends StatelessWidget {
           children: [
             // Static Content
             Container(
-              child: MacrosCard(),
+              child: MacrosCardWithData(userId: userId),
             ),
 
             const SizedBox(height: 10),
@@ -61,7 +69,7 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ),
-            // Bottom Nav Bar
+            // Assuming you have a function called bottomNavBar() that returns a widget
             bottomNavBar(),
           ],
         ),
