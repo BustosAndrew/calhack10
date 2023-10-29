@@ -20,6 +20,17 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
   List<String> allergens = [];
   List<String> vitamins = [];
   String? recipe;
+  bool isMeal = false; // New variable to track if food is a meal
+  Map<String, String> mealIngredients =
+      {}; // New variable to store ingredients and their quantities for a meal
+
+  TextEditingController ingredientAmountController =
+      TextEditingController(); // For the quantity of the meal ingredient
+
+  List<String> cookingInstructions =
+      []; // List to store step-by-step cooking instructions
+  TextEditingController cookingInstructionController =
+      TextEditingController(); // For entering each cooking step
 
   TextEditingController ingredientController = TextEditingController();
   TextEditingController allergenController = TextEditingController();
@@ -138,6 +149,79 @@ class _FoodEntryPageState extends State<FoodEntryPage> {
                 maxLines: 5,
                 validator: (value) => value!.isEmpty ? 'Enter Recipe' : null,
               ),
+              Row(
+                children: [
+                  Text("Is it a meal?"),
+                  Checkbox(
+                    value: isMeal,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isMeal = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+
+              if (isMeal) ...[
+                // Dynamic list for meal ingredients and their quantities
+                ...mealIngredients.entries
+                    .map((e) => Text('${e.key}: ${e.value}')),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: ingredientController,
+                        decoration: InputDecoration(
+                            labelText: 'Ingredient (e.g., onions)'),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextFormField(
+                        controller: ingredientAmountController,
+                        decoration: InputDecoration(
+                            labelText: 'Amount (e.g., 1 whole)'),
+                      ),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (ingredientController.text.isNotEmpty &&
+                        ingredientAmountController.text.isNotEmpty) {
+                      setState(() {
+                        mealIngredients[ingredientController.text] =
+                            ingredientAmountController.text;
+                        ingredientController.clear();
+                        ingredientAmountController.clear();
+                      });
+                    }
+                  },
+                  child: Text('Add Ingredient for Meal'),
+                ),
+
+                // Dynamic list for step-by-step cooking instructions
+                ...cookingInstructions.map((instruction) => Text(instruction)),
+                TextFormField(
+                  controller: cookingInstructionController,
+                  decoration: InputDecoration(labelText: 'Add Cooking Step'),
+                  maxLines: 3,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (cookingInstructionController.text.isNotEmpty) {
+                      setState(() {
+                        cookingInstructions
+                            .add(cookingInstructionController.text);
+                        cookingInstructionController.clear();
+                      });
+                    }
+                  },
+                  child: Text('Add Cooking Step'),
+                ),
+              ],
+
               SizedBox(height: 20),
               // Submit Button
               ElevatedButton(

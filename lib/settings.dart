@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zeppos/AddFoodDB.dart';
+import 'package:zeppos/UserProfile.dart';
 
 class Settings extends StatelessWidget {
   const Settings({Key? key}) : super(key: key);
@@ -15,7 +16,12 @@ class Settings extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.person),
             title: Text('Profile/Personal'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserProfilePage()),
+              );
+            },
           ),
           Divider(),
           ListTile(

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  User? get currentUser => _auth.currentUser;
 
   // Sign in with email & password
   Future signInWithEmailAndPassword(String email, String password) async {
@@ -18,7 +19,6 @@ class AuthService {
     }
   }
 
-  // Register with email & password
   Future registerWithEmailAndPassword(String email, String password) async {
     try {
       // 1. Register the user with Firebase Auth
@@ -34,11 +34,16 @@ class AuthService {
           'goalWeight': null,
           'allergies': null,
           'healthIssues': null,
+          'goalsugar': 50.0,
+          'goalprotein': 51.0,
+          'goalcals': 2000.0,
+          'goalsodium': 2300.0,
+          'goalfat': 70.0,
         });
         await _firestore
             .collection('users')
             .doc(user.uid)
-            .collection('dailyValues')
+            .collection('dailyMacros')
             .add({
           'calories': null,
           'protein': null,
@@ -48,8 +53,6 @@ class AuthService {
           'vitamins': null,
         });
       }
-
-      return user;
     } catch (error) {
       print(error.toString());
       return null;
